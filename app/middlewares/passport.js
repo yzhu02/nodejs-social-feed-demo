@@ -21,6 +21,7 @@ function useExternalPassportStrategy(OauthStrategy, config, accountType) {
       // 3a. If user exists, we're logging in via the 3rd party account
       // 3b. Otherwise create a user associated with the 3rd party account
 
+      console.log('authCB() is called')
       console.log('token: ' + token)
       console.log('accountType: ' + accountType)
       console.log('account: ' + util.inspect(account))

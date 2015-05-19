@@ -2,9 +2,25 @@ let _ = require('lodash')
 let then = require('express-then')
 let isLoggedIn = require('./middlewares/isLoggedIn')
 
-let posts = require('../data/posts')
+let fbgraph = require('fbgraph')
 
-let fbgragh = require('fbgraph')
+let networks = {
+    facebook: {
+        icon: 'facebook',
+        name: 'Facebook',
+        class: 'btn-primary'
+    },
+    twitter: {
+        icon: 'twitter',
+        name: 'Twitter',
+        class: 'btn-info'
+    },
+    googleplus: {
+        icon: 'google-plus',
+        name: 'Google',
+        class: 'btn-danger'
+    }
+}
 
 // Scope specifies the desired data fields from the user account
 let scope = 'email'
@@ -66,9 +82,46 @@ module.exports = (app) => {
 	}))
 
     app.get('/timeline', isLoggedIn, then(async (req, res) => {
-        
-        res.render('timeline.ejs', {
-            posts: posts
+        console.log('req.user: ' + JSON.stringify(req.user)
+            )
+        fbgraph.setAccessToken(req.user.facebook.token)
+        fbgraph.get('/me/posts', function(fbErr, fbRes) {
+            if (fbErr) {
+                console.log('facebook err: ' + JSON.stringify(fbErr))
+            } else {
+                let fbData = fbRes.data
+                let posts = fbData.map(function(fbpost) {
+                    let post = {
+                        from: {
+                        }
+                    }
+                    post.id = fbpost.id
+                    // if (req.user.facebook.account.username) {
+                    //     post.from.username = req.user.facebook.account.username
+                    // }
+                    // post.from.image = req.user.facebook.account.image
+                    post.from.name = fbpost.from.name
+                    post.text = fbpost.message
+                    if (fbpost.link) {
+                        post.link = fbpost.link
+                    }
+                    if (fbpost.picture) {
+                        post.picture = fbpost.picture
+                    }
+                    if (fbpost.likes) {
+                        post.liked = true
+                    } else {
+                        post.liked = false
+                    }
+                    post.network = networks.facebook
+                    return post
+                })
+                console.log('posts: ' + JSON.stringify(posts))
+                res.render('timeline.ejs', {
+                    posts: posts
+                })
+            }
         })
+        
     }))
 }
