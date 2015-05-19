@@ -23,14 +23,19 @@ function useExternalPassportStrategy(OauthStrategy, config, accountType) {
 
       console.log('authCB() is called')
       console.log('token: ' + token)
-      console.log('accountType: ' + accountType)
       console.log('account: ' + util.inspect(account))
 
       let user = await User.promise.findOne({'facebook.id': account.id})
       if (user) {
+        console.log('Facebook user found for given facebook.id')
         if (req.user) {
+          console.log('req.user exists')
           if (req.user.facebook.id === user.facebook.id) {
-            user.facebook.account = account
+            console.log('req.user.facebook.id matches user.facebook.id')
+            req.user = user
+            req.user.facebook.account = account
+
+            console.log('authCB() => req.user: ' + JSON.stringify(req.user))
           } else {
             console.log('req.user.facebook.id does not match with user.facebook.id')
           }
@@ -38,7 +43,7 @@ function useExternalPassportStrategy(OauthStrategy, config, accountType) {
       } else {
         let user = req.user
         if (!user) {
-          console.log('Please local login first')
+          console.log('local login first')
         } else {
           user.facebook.id = account.id
           user.facebook.email = account.emails[0].value

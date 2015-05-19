@@ -22,7 +22,9 @@ let UserSchema = mongoose.Schema({
     id: String,
     token: String,
     email: String,
-    name: String
+    name: String,
+    account: {
+    }
   },
 
   twitter: {

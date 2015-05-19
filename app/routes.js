@@ -82,8 +82,8 @@ module.exports = (app) => {
 	}))
 
     app.get('/timeline', isLoggedIn, then(async (req, res) => {
-        console.log('req.user: ' + JSON.stringify(req.user)
-            )
+        console.log('/timeline => req.user: ' + JSON.stringify(req.user))
+
         fbgraph.setAccessToken(req.user.facebook.token)
         fbgraph.get('/me/posts', function(fbErr, fbRes) {
             if (fbErr) {
