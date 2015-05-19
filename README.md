@@ -1,4 +1,4 @@
-# Social Feed Demo
+# Node.js training week 3 assignment - Social Feed Demo
 
 The demo project for the social authentication with: local, facebook, twitter, google+
 Read and display time from facebook, twitter and google+
