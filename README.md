@@ -1,12 +1,34 @@
-# Social Authenticator Demo
+# Social Feed Demo
 
-Starter project for the Social Authenticator lab. The purpose of this lab is to implement the following Passport authentication strategies: local, LinkedIn, Facebook, Twitter, and Google.
+The demo project for the social authentication with: local, facebook, twitter, google+
+Read and display time from facebook, twitter and google+
 
-## Initial Setup
+## Setup
+```
+* Install MongoDB
+* git clone git@github.com:yzhu02/nodejs-social-feed-demo.git
+  cd nodejs-social-feed-demo
+  npm install
+```
 
-1. Clone the repo: `git clone git@github.com:crabdude/social-authenticator`
-2. Install packages: `npm install`
-3. Update the database configuration in `config/database.js`
-4. Update auth keys in `config/auth.js`
-5. Run `npm start`
-6. Visit in your browser at: `http://127.0.0.1:8000`
+## To Run
+```
+### Run MongoDB: 
+* mongod
+
+### Run Social Feed Server:
+* cd nodejs-social-feed-demo
+* npm start
+
+### Browser
+* Open http://social-feed.com:8000/
+```
+
+
+## Features
+* Sign up new user account.
+* Sign in with existing user account.
+* View facebook timeline.
+
+
+(# hours spent: 10)
