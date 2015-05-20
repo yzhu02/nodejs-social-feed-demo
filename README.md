@@ -1,7 +1,6 @@
 # Node.js training week 3 assignment - Social Feed Demo
 
-The demo project for the social authentication with: local, facebook, twitter, google+
-Read and display time from facebook, twitter and google+
+The social feed demo connecting with social networks: Facebook, Twitter, Google+
 
 ## Setup
 ```
@@ -28,7 +27,10 @@ Read and display time from facebook, twitter and google+
 ## Features
 * Sign up new user account.
 * Sign in with existing user account.
-* View facebook timeline.
+* Connect the user to social network account of Facebook, Twitter or Google+
+* Pull timeline from social network Facebook, Twitter or Google+ and display.
+* Compose a new post to the connected social network Facebook, Twitter or Google+.
+* Like/Unlike a post
 
 
-(# hours spent: 10)
+(# hours spent: 16)
