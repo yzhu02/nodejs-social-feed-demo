@@ -82,46 +82,40 @@ module.exports = (app) => {
 	}))
 
     app.get('/timeline', isLoggedIn, then(async (req, res) => {
-        console.log('/timeline => req.user: ' + JSON.stringify(req.user))
-
-        fbgraph.setAccessToken(req.user.facebook.token)
-        fbgraph.get('/me/posts', function(fbErr, fbRes) {
-            if (fbErr) {
-                console.log('facebook err: ' + JSON.stringify(fbErr))
-            } else {
-                let fbData = fbRes.data
-                let posts = fbData.map(function(fbpost) {
-                    let post = {
-                        from: {
-                        }
-                    }
-                    post.id = fbpost.id
-                    // if (req.user.facebook.account.username) {
-                    //     post.from.username = req.user.facebook.account.username
-                    // }
-                    // post.from.image = req.user.facebook.account.image
-                    post.from.name = fbpost.from.name
-                    post.text = fbpost.message
-                    if (fbpost.link) {
-                        post.link = fbpost.link
-                    }
-                    if (fbpost.picture) {
-                        post.picture = fbpost.picture
-                    }
-                    if (fbpost.likes) {
-                        post.liked = true
-                    } else {
-                        post.liked = false
-                    }
-                    post.network = networks.facebook
-                    return post
-                })
-                console.log('posts: ' + JSON.stringify(posts))
-                res.render('timeline.ejs', {
-                    posts: posts
-                })
-            }
+        let posts = await getFacebookTimeline(req)
+        res.render('timeline.ejs', {
+            posts: posts
         })
-        
     }))
+
+    async function getFacebookTimeline(req) {
+        fbgraph.setAccessToken(req.user.facebook.token)
+        let fbRes = await fbgraph.promise.get('/me/posts')
+        return fbRes.data.map(function(fbpost) {
+            let post = {
+                from: {
+                }
+            }
+            post.id = fbpost.id
+            // if (req.user.facebook.account.username) {
+            //     post.from.username = req.user.facebook.account.username
+            // }
+            // post.from.image = req.user.facebook.account.image
+            post.from.name = fbpost.from.name
+            post.text = fbpost.message
+            if (fbpost.link) {
+                post.link = fbpost.link
+            }
+            if (fbpost.picture) {
+                post.picture = fbpost.picture
+            }
+            if (fbpost.likes) {
+                post.liked = true
+            } else {
+                post.liked = false
+            }
+            post.network = networks.facebook
+            return post
+        })
+    }
 }
