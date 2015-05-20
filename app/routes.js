@@ -90,4 +90,14 @@ module.exports = (app) => {
             })
         }
     }))
+
+    app.post('/like/:id', isLoggedIn, then(async (req, res) => {
+        await facebookClient.like(req.user.facebook.token, req.params.id)
+        res.end()
+    }))
+
+    app.post('/unlike/:id', isLoggedIn, then(async (req, res) => {
+        await facebookClient.unlike(req.user.facebook.token, req.params.id)
+        res.end()
+    }))
 }

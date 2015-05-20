@@ -39,5 +39,15 @@ module.exports = {
 	compose: async function(token, message) {
 		fbgraph.setAccessToken(token)
 		await fbgraph.promise.post('/me/feed', {message: message})
+	},
+
+	like: async function(token, id) {
+		fbgraph.setAccessToken(token)
+		await fbgraph.promise.post('/' + id + '/likes', {})
+	},
+
+	unlike: async function(token, id) {
+		fbgraph.setAccessToken(token)
+		await fbgraph.promise.del('/' + id + '/likes', {})
 	}
 }
