@@ -34,23 +34,26 @@ function useExternalPassportStrategy(OauthStrategy, config, accountType) {
             console.log('req.user.facebook.id matches user.facebook.id')
             req.user = user
             req.user.facebook.account = account
-
-            console.log('authCB() => req.user: ' + JSON.stringify(req.user))
+            return req.user
           } else {
-            console.log('req.user.facebook.id does not match with user.facebook.id')
+            return [false, {message: 'req.user.facebook.id does not match with user.facebook.id'}]
           }
         }
       } else {
         let user = req.user
         if (!user) {
-          console.log('local login first')
+          return [false, {message: 'not local logged in'}]
         } else {
           user.facebook.id = account.id
           user.facebook.email = account.emails[0].value
           user.facebook.token = token
           user.facebook.name = account.username
+          console.log('saving facebook user: ' + JSON.stringify(user))
           try {
-            return await user.save()
+            await user.save()
+            user.facebook.account = account
+            req.user = user
+            return user
           } catch (e) {
             console.log(util.inspect(e))
             return [false, {message: e.message}]
