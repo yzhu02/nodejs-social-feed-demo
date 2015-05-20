@@ -2,25 +2,10 @@ let _ = require('lodash')
 let then = require('express-then')
 let isLoggedIn = require('./middlewares/isLoggedIn')
 
-let fbgraph = require('fbgraph')
+require('songbird')
 
-let networks = {
-    facebook: {
-        icon: 'facebook',
-        name: 'Facebook',
-        class: 'btn-primary'
-    },
-    twitter: {
-        icon: 'twitter',
-        name: 'Twitter',
-        class: 'btn-info'
-    },
-    googleplus: {
-        icon: 'google-plus',
-        name: 'Google',
-        class: 'btn-danger'
-    }
-}
+let facebookClient = require('./facebookClient')
+
 
 // Scope specifies the desired data fields from the user account
 let scope = 'email'
@@ -82,40 +67,11 @@ module.exports = (app) => {
 	}))
 
     app.get('/timeline', isLoggedIn, then(async (req, res) => {
-        let posts = await getFacebookTimeline(req)
+        let posts = await facebookClient.getFacebookTimeline(req)
         res.render('timeline.ejs', {
             posts: posts
         })
     }))
 
-    async function getFacebookTimeline(req) {
-        fbgraph.setAccessToken(req.user.facebook.token)
-        let fbRes = await fbgraph.promise.get('/me/posts')
-        return fbRes.data.map(function(fbpost) {
-            let post = {
-                from: {
-                }
-            }
-            post.id = fbpost.id
-            // if (req.user.facebook.account.username) {
-            //     post.from.username = req.user.facebook.account.username
-            // }
-            // post.from.image = req.user.facebook.account.image
-            post.from.name = fbpost.from.name
-            post.text = fbpost.message
-            if (fbpost.link) {
-                post.link = fbpost.link
-            }
-            if (fbpost.picture) {
-                post.picture = fbpost.picture
-            }
-            if (fbpost.likes) {
-                post.liked = true
-            } else {
-                post.liked = false
-            }
-            post.network = networks.facebook
-            return post
-        })
-    }
+
 }

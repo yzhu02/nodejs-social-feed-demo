@@ -12,6 +12,8 @@ let passportMiddleware = require('./app/middlewares/passport')
 
 let util = require('util')
 
+require('songbird')
+
 const NODE_ENV = process.env.NODE_ENV || 'dev'
 
 let app = express(),

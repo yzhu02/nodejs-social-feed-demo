@@ -2,9 +2,10 @@ let passport = require('passport')
 let LocalStrategy = require('passport-local').Strategy
 let FacebookStrategy = require('passport-facebook').Strategy
 let TwitterStrategy = require('passport-twitter').Strategy
-let User = require('../models/user')
 let nodeifyit = require('nodeifyit')
 let util = require('util')
+
+let User = require('../models/user')
 
 require('songbird')
 
@@ -64,7 +65,7 @@ function useExternalPassportStrategy(OauthStrategy, config, accountType) {
   }
 }
 
-function configure(config) {
+function configure(authConfig) {
   //console.log('config: ' + util.inspect(config))
 
   // Required for session support / persistent login sessions
@@ -75,9 +76,9 @@ function configure(config) {
   }))
 
   useExternalPassportStrategy(FacebookStrategy, {
-    clientID: config.facebookAuth.consumerKey,
-    clientSecret: config.facebookAuth.consumerSecret,
-    callbackURL: config.facebookAuth.callbackUrl
+    clientID: authConfig.facebook.consumerKey,
+    clientSecret: authConfig.facebook.consumerSecret,
+    callbackURL: authConfig.facebook.callbackUrl
   }, 'facebook')
 
 

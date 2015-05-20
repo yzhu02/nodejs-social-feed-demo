@@ -1,0 +1,18 @@
+
+module.exports = {
+    facebook: {
+        icon: 'facebook',
+        name: 'Facebook',
+        class: 'btn-primary'
+    },
+    twitter: {
+        icon: 'twitter',
+        name: 'Twitter',
+        class: 'btn-info'
+    },
+    googleplus: {
+        icon: 'google-plus',
+        name: 'Google',
+        class: 'btn-danger'
+    }
+}
