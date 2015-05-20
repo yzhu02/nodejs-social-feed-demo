@@ -5,8 +5,8 @@ let networks = require('../config/networks')
 require('songbird')
 
 module.exports = {
-	getFacebookTimeline: async function(req) {
-	    fbgraph.setAccessToken(req.user.facebook.token)
+	getTimeline: async function(token) {
+	    fbgraph.setAccessToken(token)
 	    let fbRes = await fbgraph.promise.get('/me/posts')
 	    return fbRes.data.map(function(fbpost) {
 	        let post = {
@@ -34,5 +34,10 @@ module.exports = {
 	        post.network = networks.facebook
 	        return post
 	    })
+	},
+
+	compose: async function(token, message) {
+		fbgraph.setAccessToken(token)
+		await fbgraph.promise.post('/me/feed', {message: message})
 	}
 }

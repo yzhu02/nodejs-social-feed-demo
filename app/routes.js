@@ -2,6 +2,8 @@ let _ = require('lodash')
 let then = require('express-then')
 let isLoggedIn = require('./middlewares/isLoggedIn')
 
+let util = require('util')
+
 require('songbird')
 
 let facebookClient = require('./facebookClient')
@@ -67,11 +69,25 @@ module.exports = (app) => {
 	}))
 
     app.get('/timeline', isLoggedIn, then(async (req, res) => {
-        let posts = await facebookClient.getFacebookTimeline(req)
+        let posts = await facebookClient.getTimeline(req.user.facebook.token)
         res.render('timeline.ejs', {
             posts: posts
         })
     }))
 
+    app.get('/compose', isLoggedIn, (req, res) => res.render('compose.ejs'))
 
+    app.post('/compose', isLoggedIn, then(async (req, res) => {
+        let message = req.body.message
+        if (message.length != 0) {
+            if (message.length > 140) {
+                return req.flash('error', 'Post message is over maximum of 140 characters')
+            }
+            await facebookClient.compose(req.user.facebook.token, message)
+            let posts = await facebookClient.getTimeline(req.user.facebook.token)
+            res.render('timeline.ejs', {
+                posts: posts
+            })
+        }
+    }))
 }
